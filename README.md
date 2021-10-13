@@ -24,9 +24,6 @@ Args:
 ## Example usage
 
 ```shell
-$ pwd                                                                                                       [11:16:24]
-/home/sayden/go/src/github.com/elastic/beats/filebeat/module/kibana
-
 $ head log/ingest/pipeline.yml                                                                              [11:16:25]
 description: Pipeline for parsing Kibana logs
 on_failure:
