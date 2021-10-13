@@ -21,11 +21,11 @@ import (
 
 var (
 	elasticsearchUrl  = kingpin.Flag("elasticsearch", "URL of Elasticsearch. Scheme and port are mandatory (but HTTPS is not tested xD)").Default("http://localhost:9200").Short('e').String()
-	pipelineName      = kingpin.Flag("pipeline-name", "Name of the pipeline to create on elasticsearch").Default("testing").Short('n').String()
+	pipelineName      = kingpin.Flag("pipeline-name", "Name of the pipeline to create on elasticsearch").Default("testing").Short('p').String()
 	ugly              = kingpin.Flag("ugly", "Deactivate pretty printing").Short('u').Bool()
 	bulk              = kingpin.Flag("bulk", "Use bulk if you want to make a single request to ES and get a single response with many documents").Short('b').Default("false").Bool()
-	skip              = kingpin.Flag("skip", "Skip the N first documents").Default("0").Int()
-	total             = kingpin.Flag("total", "Process a total of N documents. You can use it with skip").Default("0").Int()
+	skip              = kingpin.Flag("skip", "Skip the N first documents").Default("0").Short('s').Int()
+	total             = kingpin.Flag("total", "Process a total of N documents. You can use it with skip").Short('n').Default("0").Int()
 	useStdin          = kingpin.Flag("stdin", "Instead of using an input log file, read from stdin").Short('i').Bool()
 	inputPipelineFile = kingpin.Arg("pipeline", "File path of the pipeline to use").Required().String()
 	inputLogFile      = kingpin.Arg("logs", "The log filepath to parse. Use stdin flag if you want to work just on the cli").String()
@@ -101,7 +101,18 @@ func simulateBulk(client http.Client, reader io.Reader) {
 	simulateDocs := make([]SimulateDoc, 0)
 
 	scanner := bufio.NewScanner(reader)
+	var i, t int
 	for scanner.Scan() {
+		if *skip != 0 && i < *skip {
+			i++
+			continue
+		}
+
+		if *total != 0 && t >= *total {
+			break
+		}
+		t++
+
 		simulateDocs = append(simulateDocs, SimulateDoc{
 			Source: map[string]interface{}{"message": scanner.Text()},
 		})
@@ -152,9 +163,9 @@ func doRequest(elasticsearchURL, pipelineName string, outputData interface{}, cl
 
 	// Do not pretty print output. Useful to pipe data in bash
 	if uglyPrint {
-		fmt.Println(string(inputBody))
+		fmt.Printf(string(inputBody))
 	} else {
-		log.Infof("Result:\n%s\n", string(pretty.Color(pretty.Pretty(pretty.PrettyOptions(inputBody, &pretty.Options{
+		log.Infof("Response:\n%s\n", string(pretty.Color(pretty.Pretty(pretty.PrettyOptions(inputBody, &pretty.Options{
 			Width:    120,
 			Prefix:   "",
 			Indent:   "  ",
@@ -203,7 +214,7 @@ func insertPipelineToElasticsearch(client http.Client) {
 	if *ugly {
 		fmt.Println(string(body))
 	} else {
-		fmt.Printf("Pipeline output:\n%s", string(pretty.Color(pretty.Pretty(body), nil)))
+		log.Infof("Pipeline insertion output:\n%s", string(pretty.Color(pretty.Pretty(body), nil)))
 	}
 
 	if res.StatusCode != 200 {
