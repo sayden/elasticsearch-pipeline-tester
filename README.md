@@ -24,9 +24,9 @@ Args:
 ## Example usage
 
 ```shell
-sayden➜filebeat/module/kibana(master✗)» pwd                                                                                                       [11:16:24]
+$ pwd                                                                                                       [11:16:24]
 /home/sayden/go/src/github.com/elastic/beats/filebeat/module/kibana
-sayden➜filebeat/module/kibana(master✗)» head log/ingest/pipeline.yml                                                                              [11:16:25]
+$ head log/ingest/pipeline.yml                                                                              [11:16:25]
 description: Pipeline for parsing Kibana logs
 on_failure:
 - set:
@@ -37,12 +37,14 @@ processors:
     field: event.ingested
     value: '{{_ingest.timestamp}}'
 - rename:
-sayden➜filebeat/module/kibana(master✗)» head log/test/test.log                                                                                    [11:16:37]
+$
+$ head log/test/test.log                                                                                    [11:16:37]
 {"type":"response","@timestamp":"2018-05-09T10:57:55Z","tags":[],"pid":69410,"method":"get","statusCode":304,"req":{"url":"/ui/fonts/open_sans/open_sans_v15_latin_600.woff2","method":"get","headers":{"host":"localhost:5601","connection":"keep-alive","origin":"http://localhost:5601","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36","accept":"*/*","referer":"http://localhost:5601/app/kibana","accept-encoding":"gzip, deflate, br","accept-language":"en-US,en;q=0.9,de;q=0.8","if-none-match":"\"24234c1c81b3948758c1a0be8e5a65386ca94c52\"","if-modified-since":"Thu, 03 May 2018 09:45:28 GMT"},"remoteAddress":"127.0.0.1","userAgent":"127.0.0.1","referer":"http://localhost:5601/app/kibana"},"res":{"statusCode":304,"responseTime":26,"contentLength":9},"message":"GET /ui/fonts/open_sans/open_sans_v15_latin_600.woff2 304 26ms - 9.0B"}
 {"type":"log","@timestamp":"2018-05-09T10:59:12Z","tags":["debug","monitoring-ui","kibana-monitoring"],"pid":69776,"message":"Fetching data from kibana_stats collector"}
 {"type":"log","@timestamp":"2018-05-09T10:59:12Z","tags":["reporting","debug","exportTypes"],"pid":69776,"message":"Found exportType at /Users/ruflin/Downloads/6.3/kibana-6.3.0-darwin-x86_64/node_modules/x-pack/plugins/reporting/export_types/csv/server/index.js"}
 {"type":"response","@timestamp":"2018-05-09T10:57:55Z","tags":[],"pid":69410,"method":"get","statusCode":304,"req":{"url":"/ui/fonts/open_sans/open_sans_v15_latin_600.woff2","method":"get","headers":{"host":"localhost:5601","connection":"keep-alive","origin":"http://localhost:5601","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36","accept":"*/*","referer":"http://localhost:5601/app/kibana","accept-encoding":"gzip, deflate, br","accept-language":"en-US,en;q=0.9,de;q=0.8","if-none-match":"\"24234c1c81b3948758c1a0be8e5a65386ca94c52\"","if-modified-since":"Thu, 03 May 2018 09:45:28 GMT"},"remoteAddress":"127.0.0.1","userAgent":"127.0.0.1","referer":"http://localhost:5601/app/kibana"},"res":{"statusCode":304,"responseTime":3000,"contentLength":9},"message":"GET /ui/fonts/open_sans/open_sans_v15_latin_600.woff2 304 26ms - 9.0B"}
-sayden➜github.com/sayden/pipelinetester(main✗)» ./pipelinetester -n 1 ~/go/src/github.com/elastic/beats/filebeat/module/kibana/log/ingest/pipeline.yml ~/go/src/github.com/elastic/beats/filebeat/module/kibana/log/test/test.log
+$
+$ pipelinetester -n 1 ~/go/src/github.com/elastic/beats/filebeat/module/kibana/log/ingest/pipeline.yml ~/go/src/github.com/elastic/beats/filebeat/module/kibana/log/test/test.log
   INFO[0000](2021-10-13T11:25:05.162856172+02:00) github.com/sayden/pipelinetester/main.go:217 Pipeline insertion output:
 {
   "acknowledged": true
